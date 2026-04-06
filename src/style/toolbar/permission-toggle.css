@@ -54,3 +54,8 @@
   transform: translateX(14px);
   background: var(--claudian-brand);
 }
+
+/* 紧跟在 YOLO 后面的 Sandbox 不需要再 margin-left: auto，直接靠右紧挨着显示 */
+.claudian-permission-toggle + .claudian-permission-toggle {
+  margin-left: 0;
+}

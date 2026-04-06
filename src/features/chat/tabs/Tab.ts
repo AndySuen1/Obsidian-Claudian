@@ -396,6 +396,7 @@ export function createTab(options: TabCreateOptions): TabData {
       mcpServerSelector: null,
       permissionToggle: null,
       serviceTierToggle: null,
+      externalAccessToggle: null,
       slashCommandDropdown: null,
       instructionModeManager: null,
       bangBashModeManager: null,
@@ -736,6 +737,7 @@ function initializeInputToolbar(
     };
   };
 
+  let sandboxPreviousModel: string | null = null;
   const toolbarComponents = createInputToolbar(inputToolbar, {
     getUIConfig: () => {
       if (tab.lifecycleState === 'blank') {
@@ -833,6 +835,26 @@ function initializeInputToolbar(
         mode === 'plan' && getTabCapabilities(tab, plugin).supportsPlanMode,
       );
     },
+    onExternalAccessChange: (enabled) => {
+      if (enabled) {
+        sandboxPreviousModel = plugin.settings.model;
+        plugin.settings.model = 'haiku';
+        if (tab.service) {
+          tab.service.tabAllowExternalAccess = false;
+        }
+      } else {
+        if (sandboxPreviousModel) {
+          plugin.settings.model = sandboxPreviousModel;
+          sandboxPreviousModel = null;
+        }
+        if (tab.service) {
+          tab.service.tabAllowExternalAccess = true;
+        }
+      }
+      tab.ui.thinkingBudgetSelector?.updateDisplay();
+      tab.ui.modelSelector?.updateDisplay();
+      tab.ui.modelSelector?.renderOptions();
+    },
   });
 
   tab.ui.modelSelector = toolbarComponents.modelSelector;
@@ -842,6 +864,7 @@ function initializeInputToolbar(
   tab.ui.mcpServerSelector = toolbarComponents.mcpServerSelector;
   tab.ui.permissionToggle = toolbarComponents.permissionToggle;
   tab.ui.serviceTierToggle = toolbarComponents.serviceTierToggle;
+  tab.ui.externalAccessToggle = toolbarComponents.externalAccessToggle;
 
   tab.ui.mcpServerSelector.setMcpManager(getProviderMcpManager(getTabProviderId(tab, plugin)));
 
@@ -870,6 +893,27 @@ function initializeInputToolbar(
 
   // Gate provider-specific UI elements
   applyProviderUIGating(tab, plugin);
+
+  // Drag vault files onto input wrapper to set as current note context
+  const vaultFileDropWrapper = dom.inputContainerEl.querySelector('.claudian-input-wrapper');
+  if (vaultFileDropWrapper) {
+    vaultFileDropWrapper.addEventListener('dragover', (e) => {
+      const app = plugin.app;
+      if ((app.dragManager as any)?.draggable?.file) {
+        e.preventDefault();
+      }
+    });
+    vaultFileDropWrapper.addEventListener('drop', (e) => {
+      const app = plugin.app;
+      const tFile = (app.dragManager as any)?.draggable?.file;
+      if (!tFile) return;
+      e.preventDefault();
+      const fileContextManager = tab.ui.fileContextManager;
+      if (!fileContextManager) return;
+      fileContextManager.setCurrentNote(tFile.path);
+    });
+  }
+
 }
 
 export interface InitializeTabUIOptions {

@@ -185,8 +185,11 @@ export class FileContextManager {
       } else {
         this.currentNotePath = null;
       }
-      this.refreshCurrentNoteChip();
+    } else if (!this.hasExcludedTag(file) && normalizedPath !== this.currentNotePath) {
+      this.currentNotePath = normalizedPath;
+      this.state.resetCurrentNoteSent();
     }
+    this.refreshCurrentNoteChip();
   }
 
   markFileCacheDirty() {

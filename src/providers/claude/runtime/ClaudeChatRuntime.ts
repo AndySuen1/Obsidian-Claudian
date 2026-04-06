@@ -136,6 +136,8 @@ export class ClaudianService implements ChatRuntime {
   private permissionModeSyncCallback: ((sdkMode: string) => void) | null = null;
   private vaultPath: string | null = null;
   private currentExternalContextPaths: string[] = [];
+  /** Per-tab external access override. When true, bypasses vault restriction hooks for this tab. */
+  tabAllowExternalAccess = false;
   private readyStateListeners = new Set<(ready: boolean) => void>();
 
   // Modular components

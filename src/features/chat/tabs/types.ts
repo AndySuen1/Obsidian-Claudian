@@ -18,6 +18,7 @@ import type { FileContextManager } from '../ui/FileContext';
 import type { ImageContextManager } from '../ui/ImageContext';
 import type {
   ContextUsageMeter,
+  ExternalAccessToggle,
   ExternalContextSelector,
   McpServerSelector,
   ModelSelector,
@@ -48,7 +49,7 @@ export const MIN_TABS = 3;
  * Maximum number of tabs allowed (settings ceiling).
  * Users can configure up to this many tabs via settings.
  */
-export const MAX_TABS = 10;
+export const MAX_TABS = 12;
 
 /**
  * Minimum max-height for textarea in pixels.
@@ -130,6 +131,7 @@ export interface TabUIComponents {
   mcpServerSelector: McpServerSelector | null;
   permissionToggle: PermissionToggle | null;
   serviceTierToggle: ServiceTierToggle | null;
+  externalAccessToggle: ExternalAccessToggle | null;
   slashCommandDropdown: SlashCommandDropdown | null;
   instructionModeManager: InstructionModeManager | null;
   bangBashModeManager: BangBashModeManager | null;

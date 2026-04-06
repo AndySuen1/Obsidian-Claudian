@@ -33,6 +33,7 @@ export interface ToolbarCallbacks {
   onEffortLevelChange: (effort: string) => Promise<void>;
   onServiceTierChange: (serviceTier: string) => Promise<void>;
   onPermissionModeChange: (mode: string) => Promise<void>;
+  onExternalAccessChange: (enabled: boolean) => void;
   getSettings: () => ToolbarSettings;
   getEnvironmentVariables?: () => string;
   getUIConfig: () => ProviderChatUIConfig;
@@ -393,6 +394,53 @@ export class ServiceTierToggle {
       ? toggleConfig.inactiveValue
       : toggleConfig.activeValue;
     await this.callbacks.onServiceTierChange(next);
+    this.updateDisplay();
+  }
+}
+
+export interface ExternalAccessToggleCallbacks {
+  onExternalAccessChange: (enabled: boolean) => void;
+}
+
+export class ExternalAccessToggle {
+  private container: HTMLElement;
+  private toggleEl: HTMLElement | null = null;
+  private labelEl: HTMLElement | null = null;
+  private _enabled = true;
+  private callbacks: ExternalAccessToggleCallbacks;
+
+  constructor(parentEl: HTMLElement, callbacks: ExternalAccessToggleCallbacks) {
+    this.callbacks = callbacks;
+    this.container = parentEl.createDiv({ cls: 'claudian-permission-toggle' });
+    this.render();
+  }
+
+  private render() {
+    this.container.empty();
+    this.labelEl = this.container.createSpan({ cls: 'claudian-permission-label' });
+    this.labelEl.setText('Sandbox');
+    this.toggleEl = this.container.createDiv({ cls: 'claudian-toggle-switch' });
+    this.updateDisplay();
+    this.toggleEl.addEventListener('click', () => this.toggle());
+  }
+
+  updateDisplay() {
+    if (!this.toggleEl) return;
+    if (this._enabled) {
+      this.toggleEl.addClass('active');
+    } else {
+      this.toggleEl.removeClass('active');
+    }
+  }
+
+  toggle() {
+    this._enabled = !this._enabled;
+    this.updateDisplay();
+    this.callbacks.onExternalAccessChange(this._enabled);
+  }
+
+  setEnabled(value: boolean) {
+    this._enabled = value;
     this.updateDisplay();
   }
 }
@@ -1074,6 +1122,7 @@ export function createInputToolbar(
   mcpServerSelector: McpServerSelector;
   permissionToggle: PermissionToggle;
   serviceTierToggle: ServiceTierToggle;
+  externalAccessToggle: ExternalAccessToggle;
 } {
   const modelSelector = new ModelSelector(parentEl, callbacks);
   const thinkingBudgetSelector = new ThinkingBudgetSelector(parentEl, callbacks);
@@ -1082,6 +1131,7 @@ export function createInputToolbar(
   const externalContextSelector = new ExternalContextSelector(parentEl, callbacks);
   const mcpServerSelector = new McpServerSelector(parentEl);
   const permissionToggle = new PermissionToggle(parentEl, callbacks);
+  const externalAccessToggle = new ExternalAccessToggle(parentEl, callbacks);
 
   return {
     modelSelector,
@@ -1091,5 +1141,6 @@ export function createInputToolbar(
     externalContextSelector,
     mcpServerSelector,
     permissionToggle,
+    externalAccessToggle,
   };
 }

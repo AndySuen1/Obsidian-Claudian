@@ -8,7 +8,7 @@ import { DEFAULT_CHAT_PROVIDER_ID, type ProviderId } from '../../core/providers/
 import { VIEW_TYPE_CLAUDIAN } from '../../core/types';
 import type ClaudianPlugin from '../../main';
 import type { HistoryConversationOpenState } from './controllers/ConversationController';
-import { getTabProviderId, onProviderAvailabilityChanged, updatePlanModeUI } from './tabs/Tab';
+import { getTabProviderId, getTabTitle, onProviderAvailabilityChanged, updatePlanModeUI } from './tabs/Tab';
 import { TabBar } from './tabs/TabBar';
 import { TabManager } from './tabs/TabManager';
 import type { TabData, TabId } from './tabs/types';
@@ -30,6 +30,7 @@ export class ClaudianView extends ItemView {
   private titleSlotEl: HTMLElement | null = null;
   private logoEl: HTMLElement | null = null;
   private titleTextEl: HTMLElement | null = null;
+  private conversationTitleEl: HTMLElement | null = null;
   private headerActionsEl: HTMLElement | null = null;
   private headerActionsContent: HTMLElement | null = null;
 
@@ -231,6 +232,10 @@ export class ClaudianView extends ItemView {
     // Title text (hidden in header mode when 2+ tabs)
     this.titleTextEl = this.titleSlotEl.createEl('h4', { text: 'Claudian', cls: 'claudian-title-text' });
 
+    // Conversation title (shows active tab's session title next to branding)
+    this.conversationTitleEl = this.titleSlotEl.createSpan({ cls: 'claudian-header-conv-title' });
+    this.conversationTitleEl.style.display = 'none';
+
     // Header actions container (for header mode - initially hidden)
     this.headerActionsEl = header.createDiv({ cls: 'claudian-header-actions claudian-header-actions-slot' });
     this.headerActionsEl.style.display = 'none';
@@ -413,6 +418,20 @@ export class ClaudianView extends ItemView {
     }
     if (this.titleTextEl) {
       this.titleTextEl.style.display = hideBranding ? 'none' : '';
+    }
+    if (this.conversationTitleEl) {
+      if (hideBranding) {
+        this.conversationTitleEl.style.display = 'none';
+      } else {
+        const activeTab = this.tabManager.getActiveTab();
+        const title = activeTab ? getTabTitle(activeTab, this.plugin) : '';
+        if (title) {
+          this.conversationTitleEl.setText(title);
+          this.conversationTitleEl.style.display = '';
+        } else {
+          this.conversationTitleEl.style.display = 'none';
+        }
+      }
     }
   }
 
