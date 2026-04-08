@@ -61,4 +61,6 @@ export interface ChatRuntime {
 
   loadSubagentToolCalls?(agentId: string): Promise<ToolCallInfo[]>;
   loadSubagentFinalResult?(agentId: string): Promise<string | null>;
+
+  tabAllowExternalAccess?: boolean;
 }

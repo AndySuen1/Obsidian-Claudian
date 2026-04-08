@@ -899,13 +899,13 @@ function initializeInputToolbar(
   if (vaultFileDropWrapper) {
     vaultFileDropWrapper.addEventListener('dragover', (e) => {
       const app = plugin.app;
-      if ((app.dragManager as any)?.draggable?.file) {
+      if ((app as any).dragManager?.draggable?.file) {
         e.preventDefault();
       }
     });
     vaultFileDropWrapper.addEventListener('drop', (e) => {
       const app = plugin.app;
-      const tFile = (app.dragManager as any)?.draggable?.file;
+      const tFile = (app as any).dragManager?.draggable?.file;
       if (!tFile) return;
       e.preventDefault();
       const fileContextManager = tab.ui.fileContextManager;

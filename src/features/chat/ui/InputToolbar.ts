@@ -33,7 +33,7 @@ export interface ToolbarCallbacks {
   onEffortLevelChange: (effort: string) => Promise<void>;
   onServiceTierChange: (serviceTier: string) => Promise<void>;
   onPermissionModeChange: (mode: string) => Promise<void>;
-  onExternalAccessChange: (enabled: boolean) => void;
+  onExternalAccessChange?: (enabled: boolean) => void;
   getSettings: () => ToolbarSettings;
   getEnvironmentVariables?: () => string;
   getUIConfig: () => ProviderChatUIConfig;
@@ -399,7 +399,7 @@ export class ServiceTierToggle {
 }
 
 export interface ExternalAccessToggleCallbacks {
-  onExternalAccessChange: (enabled: boolean) => void;
+  onExternalAccessChange?: (enabled: boolean) => void;
 }
 
 export class ExternalAccessToggle {
@@ -436,7 +436,7 @@ export class ExternalAccessToggle {
   toggle() {
     this._enabled = !this._enabled;
     this.updateDisplay();
-    this.callbacks.onExternalAccessChange(this._enabled);
+    this.callbacks.onExternalAccessChange?.(this._enabled);
   }
 
   setEnabled(value: boolean) {
