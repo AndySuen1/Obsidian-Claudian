@@ -1,5 +1,7 @@
 # Claudian
 
+**English | [中文](README.md)**
+
 ![GitHub stars](https://img.shields.io/github/stars/AndySuen1/claudian?style=social)
 ![GitHub release](https://img.shields.io/github/v/release/AndySuen1/claudian)
 ![License](https://img.shields.io/github/license/AndySuen1/claudian)
@@ -19,6 +21,12 @@ Open the chat sidebar from the ribbon icon or command palette. Select text and u
 **`@mention`** - Type `@` to mention anything you want the agent to work with, vault files, subagents, MCP servers, or files in external directories.
 
 **Plan Mode** — Toggle via `Shift+Tab`. The agent explores and designs before implementing, then presents a plan for approval.
+
+**Sandbox Mode** — Toolbar toggle (on by default). When enabled, automatically switches to Haiku and restricts external file access for a lightweight, safe sandbox; disabling restores the previous model and reopens external access.
+
+**Header Conversation Title** — In single-tab mode, the active session title is shown next to the branding in the header for quick context.
+
+**Drag-to-Context** — Drag any vault file onto the input area to instantly set it as the current note context.
 
 **Instruction Mode (`#`)** — Refined custom instructions added from the chat input.
 
@@ -159,6 +167,9 @@ src/
 
 - [x] 1M Opus and Sonnet models
 - [x] Codex provider integration
+- [x] Sandbox mode (auto-switch Haiku + restrict external access)
+- [x] Drag vault files onto input for quick context switching
+- [x] Header conversation title display
 - [ ] More to come!
 
 ## License

@@ -8,7 +8,7 @@
 
 ![Preview](Preview.png)
 
-一款将 Claude Code 作为 AI 协作者嵌入 Obsidian 笔记库的插件。你的笔记库将成为 Claude 的工作目录，赋予其完整的代理能力：文件读写、搜索、执行 bash 命令以及多步骤工作流。
+一款将 AI 编码代理（Claude Code、Codex 等）嵌入 Obsidian 笔记库的插件。你的笔记库将成为代理的工作目录，赋予其完整的代理能力：文件读写、搜索、执行 bash 命令以及多步骤工作流。
 
 ## 功能特性
 
@@ -31,9 +31,9 @@
 
 ## 环境要求
 
-- 已安装 [Claude Code CLI](https://code.claude.com/docs/en/overview)（强烈建议通过原生安装方式安装 Claude Code）
-- Obsidian v1.8.9+
-- Claude 订阅/API 或支持 Anthropic API 格式的自定义模型提供商（[Openrouter](https://openrouter.ai/docs/guides/guides/claude-code-integration)、[Kimi](https://platform.moonshot.ai/docs/guide/agent-support)、[GLM](https://docs.z.ai/devpack/tool/claude)、[DeepSeek](https://api-docs.deepseek.com/guides/anthropic_api) 等）
+- **Claude 提供商**：已安装 [Claude Code CLI](https://code.claude.com/docs/en/overview)（强烈建议通过原生安装方式安装）；Claude 订阅/API 或支持 Anthropic API 格式的自定义模型提供商（[Openrouter](https://openrouter.ai/docs/guides/guides/claude-code-integration)、[Kimi](https://platform.moonshot.ai/docs/guide/agent-support)、[GLM](https://docs.z.ai/devpack/tool/claude)、[DeepSeek](https://api-docs.deepseek.com/guides/anthropic_api) 等）
+- **Codex 提供商**（可选）：已安装 [Codex CLI](https://github.com/openai/codex)
+- Obsidian v1.4.5+
 - 仅支持桌面端（macOS、Linux、Windows）
 
 ## 安装
@@ -223,31 +223,22 @@ dirname $(which node)
 ```
 src/
 ├── main.ts                      # 插件入口
-├── core/                        # 核心基础设施
-│   ├── agent/                   # Claude Agent SDK 封装（ClaudianService）
-│   ├── agents/                  # 自定义代理管理（AgentManager）
-│   ├── commands/                # 斜杠命令管理（SlashCommandManager）
-│   ├── hooks/                   # PreToolUse/PostToolUse 钩子
-│   ├── images/                  # 图片缓存与加载
-│   ├── mcp/                     # MCP 服务器配置、服务与测试
-│   ├── plugins/                 # Claude Code 插件发现与管理
-│   ├── prompts/                 # 代理系统提示
-│   ├── sdk/                     # SDK 消息转换
-│   ├── security/                # 批准、阻止列表、路径验证
-│   ├── storage/                 # 分布式存储系统
-│   ├── tools/                   # 工具常量与工具函数
-│   └── types/                   # 类型定义
-├── features/                    # 功能模块
-│   ├── chat/                    # 主聊天视图 + UI、渲染、控制器、标签页
-│   ├── inline-edit/             # 内联编辑服务 + UI
-│   └── settings/                # 设置标签页 UI
-├── shared/                      # 共享 UI 组件和模态框
-│   ├── components/              # 输入工具栏组件、下拉菜单、选中高亮
-│   ├── mention/                 # @提及下拉控制器
-│   ├── modals/                  # 指令模态框
-│   └── icons.ts                 # 共享 SVG 图标
+├── app/                         # 共享默认值与插件级存储
+├── core/                        # Provider 中立的运行时、注册表与类型契约
+│   ├── runtime/                 # ChatRuntime 接口与审批类型
+│   ├── providers/               # Provider 注册表与工作区服务
+│   ├── security/                # 审批工具
+│   └── ...                      # commands、mcp、prompt、storage、tools、types
+├── providers/
+│   ├── claude/                  # Claude SDK 适配器：提示编码、流转换、历史、MCP、插件
+│   └── codex/                   # Codex app-server 适配器：JSON-RPC 传输、JSONL 历史
+├── features/
+│   ├── chat/                    # 侧边栏聊天：标签页、控制器、渲染器
+│   ├── inline-edit/             # 内联编辑模态框与 Provider 编辑服务
+│   └── settings/                # 设置外壳与 Provider 标签页
+├── shared/                      # 可复用 UI 组件和模态框
 ├── i18n/                        # 国际化（10 种语言）
-├── utils/                       # 模块化工具函数
+├── utils/                       # 跨模块工具函数
 └── style/                       # 模块化 CSS（→ styles.css）
 ```
 
@@ -265,7 +256,7 @@ src/
 - [x] Sandbox 模式（自动切换 Haiku + 限制外部访问）
 - [x] 拖拽 vault 文件到输入框快速切换上下文
 - [x] 标题栏会话标题显示
-- [ ] Codex SDK 集成
+- [x] Codex 提供商集成
 - [ ] 钩子及其他高级功能
 - [ ] 更多功能即将推出！
 
