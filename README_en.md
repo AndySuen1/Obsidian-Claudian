@@ -175,7 +175,6 @@ Licensed under the [MIT License](LICENSE).
  </picture>
 </a>
 
-
 ## Acknowledgments
 
 - [Obsidian](https://obsidian.md) for the plugin API
