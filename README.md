@@ -6,8 +6,6 @@
 ![GitHub release](https://img.shields.io/github/v/release/AndySuen1/claudian)
 ![License](https://img.shields.io/github/license/AndySuen1/claudian)
 
-![Preview](Preview.png)
-
 本仓库是 [YishenTu/claudian](https://github.com/YishenTu/claudian) 的 fork，在其基础上增加了若干个人偏好的功能改动。
 
 **原插件的介绍、安装、配置、使用方法、权限模型、隐私说明、故障排除等完整文档，请参见上游仓库：** [YishenTu/claudian](https://github.com/YishenTu/claudian)
@@ -30,9 +28,6 @@
 
 ### FileContext 自动切换修复
 会话开始后切换到未被排除的笔记时，当前笔记会自动更新并重置 sent 状态，使新笔记能在下一轮对话中被重新发送。
-
-### 其他改动
-- README 默认语言改为中文（英文版为 [README_en.md](README_en.md)）。
 
 ## 安装
 

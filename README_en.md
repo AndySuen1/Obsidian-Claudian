@@ -6,8 +6,6 @@
 ![GitHub release](https://img.shields.io/github/v/release/AndySuen1/claudian)
 ![License](https://img.shields.io/github/license/AndySuen1/claudian)
 
-![Preview](Preview.png)
-
 This repository is a fork of [YishenTu/claudian](https://github.com/YishenTu/claudian) with a few personal feature tweaks on top.
 
 **For the full plugin overview, installation, configuration, usage, permissions, privacy, and troubleshooting docs, see the upstream repo:** [YishenTu/claudian](https://github.com/YishenTu/claudian)
@@ -30,9 +28,6 @@ Drag any vault file onto the input area to set it as the current note context.
 
 ### FileContext Auto-Switch Fix
 After a session has started, switching to a non-excluded note now updates the current note and resets its sent state, so the new note is re-sent on the next turn.
-
-### Other Tweaks
-- Default README language is Chinese (English version lives in [README_en.md](README_en.md)).
 
 ## Installation
 
