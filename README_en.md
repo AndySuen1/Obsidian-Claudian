@@ -1,4 +1,4 @@
-# Claudian
+# Claudian (AndySuen1 Fork)
 
 **English | [中文](README.md)**
 
@@ -8,186 +8,60 @@
 
 ![Preview](Preview.png)
 
-An Obsidian plugin that embeds AI coding agents (Claude Code, Codex, and more to come) in your vault. Your vault becomes the agent's working directory — file read/write, search, bash, and multi-step workflows all work out of the box.
+This repository is a fork of [YishenTu/claudian](https://github.com/YishenTu/claudian) with a few personal feature tweaks on top.
 
-## Features & Usage
+**For the full plugin overview, installation, configuration, usage, permissions, privacy, and troubleshooting docs, see the upstream repo:** [YishenTu/claudian](https://github.com/YishenTu/claudian)
 
-Open the chat sidebar from the ribbon icon or command palette. Select text and use the hotkey for inline edit. Everything works like Claude Code or Codex — talk to the agent, and it reads, writes, edits, and searches files in your vault.
+This README only covers what this fork adds on top of upstream.
 
-**Inline Edit** — Select text or start at the cursor position + hotkey to edit directly in notes with word-level diff preview.
+## What This Fork Adds
 
-**Slash Commands & Skills** — Type `/` or `$` for reusable prompt templates or Skills from user- and vault-level scopes.
+### Sandbox Mode
+A new Sandbox toggle in the toolbar, on by default:
+- **When enabled**: automatically switches to Haiku and closes external file access, giving the default session a lightweight, safe sandbox.
+- **When disabled**: restores the previous model and reopens external access.
+- The setting is stored per-tab (`tabAllowExternalAccess`), so tabs don't interfere with each other.
 
-**`@mention`** - Type `@` to mention anything you want the agent to work with, vault files, subagents, MCP servers, or files in external directories.
+### Header Conversation Title
+In single-tab mode, the active session title is shown next to the branding in the header so you can see the current conversation at a glance.
 
-**Plan Mode** — Toggle via `Shift+Tab`. The agent explores and designs before implementing, then presents a plan for approval.
+### Drag-to-Context
+Drag any vault file onto the input area to set it as the current note context.
 
-**Sandbox Mode** — Toolbar toggle (on by default). When enabled, automatically switches to Haiku and restricts external file access for a lightweight, safe sandbox; disabling restores the previous model and reopens external access.
+### FileContext Auto-Switch Fix
+After a session has started, switching to a non-excluded note now updates the current note and resets its sent state, so the new note is re-sent on the next turn.
 
-**Header Conversation Title** — In single-tab mode, the active session title is shown next to the branding in the header for quick context.
-
-**Drag-to-Context** — Drag any vault file onto the input area to instantly set it as the current note context.
-
-**Instruction Mode (`#`)** — Refined custom instructions added from the chat input.
-
-**MCP Servers** — Connect external tools via Model Context Protocol (stdio, SSE, HTTP). Claude manages vault MCP in-app; Codex uses its own CLI-managed MCP configuration.
-
-**Multi-Tab & Conversations** — Multiple chat tabs, conversation history, fork, resume, and compact.
-
-## Requirements
-
-- **Claude provider**: [Claude Code CLI](https://code.claude.com/docs/en/overview) installed (native install recommended). Claude subscription/API or compatible provider ([Openrouter](https://openrouter.ai/docs/guides/guides/claude-code-integration), [Kimi](https://platform.moonshot.ai/docs/guide/agent-support), etc.).
-- **Codex provider** (optional): [Codex CLI](https://github.com/openai/codex) installed.
-- Obsidian v1.4.5+
-- Desktop only (macOS, Linux, Windows)
+### Other Tweaks
+- Max tabs raised from 10 to 12.
+- Voice input (WinRT) feature and its stylesheet removed.
+- Default README language is Chinese (English version lives in [README_en.md](README_en.md)).
 
 ## Installation
 
-### From GitHub Release (recommended)
+Same as upstream — just swap the repo URL for this fork.
 
-1. Download `main.js`, `manifest.json`, and `styles.css` from the [latest release](https://github.com/AndySuen1/claudian/releases/latest)
-2. Create a folder called `claudian` in your vault's plugins folder:
-   ```
-   /path/to/vault/.obsidian/plugins/claudian/
-   ```
-3. Copy the downloaded files into the `claudian` folder
-4. Enable the plugin in Obsidian:
-   - Settings → Community plugins → Enable "Claudian"
+### GitHub Release
+Download `main.js`, `manifest.json`, and `styles.css` from the [latest release](https://github.com/AndySuen1/claudian/releases/latest), drop them in `/path/to/vault/.obsidian/plugins/claudian/`, and enable the plugin under Community plugins.
 
-### Using BRAT
+### BRAT
+Add the repo URL in BRAT: `https://github.com/AndySuen1/claudian`.
 
-[BRAT](https://github.com/TfTHacker/obsidian42-brat) (Beta Reviewers Auto-update Tester) allows you to install and automatically update plugins directly from GitHub.
-
-1. Install the BRAT plugin from Obsidian Community Plugins
-2. Enable BRAT in Settings → Community plugins
-3. Open BRAT settings and click "Add Beta plugin"
-4. Enter the repository URL: `https://github.com/AndySuen1/claudian`
-5. Click "Add Plugin" and BRAT will install Claudian automatically
-6. Enable Claudian in Settings → Community plugins
-
-> **Tip**: BRAT will automatically check for updates and notify you when a new version is available.
-
-### From source (development)
-
-1. Clone this repository into your vault's plugins folder:
-   ```bash
-   cd /path/to/vault/.obsidian/plugins
-   git clone https://github.com/AndySuen1/claudian.git
-   cd claudian
-   ```
-
-2. Install dependencies and build:
-   ```bash
-   npm install
-   npm run build
-   ```
-
-3. Enable the plugin in Obsidian:
-   - Settings → Community plugins → Enable "Claudian"
-
-### Development
-
+### From source
 ```bash
-# Watch mode
-npm run dev
-
-# Production build
+cd /path/to/vault/.obsidian/plugins
+git clone https://github.com/AndySuen1/claudian.git
+cd claudian
+npm install
 npm run build
 ```
 
-> **Tip**: Copy `.env.local.example` to `.env.local` or `npm install` and setup your vault path to auto-copy files during development.
-
-## Privacy & Data Use
-
-- **Sent to API**: Your input, attached files, images, and tool call outputs. Default: Anthropic (Claude) or OpenAI (Codex); configurable via environment variables.
-- **Local storage**: Claudian settings and session metadata in `vault/.claudian/`; Claude provider files in `vault/.claude/`; transcripts in `~/.claude/projects/` (Claude) and `~/.codex/sessions/` (Codex).
-- **No telemetry**: No tracking beyond your configured API provider.
-
-## Troubleshooting
-
-### Claude CLI not found
-
-If you encounter `spawn claude ENOENT` or `Claude CLI not found`, the plugin can't auto-detect your Claude installation. Common with Node version managers (nvm, fnm, volta).
-
-**Solution**: Find your CLI path and set it in Settings → Advanced → Claude CLI path.
-
-| Platform | Command | Example Path |
-|----------|---------|--------------|
-| macOS/Linux | `which claude` | `/Users/you/.volta/bin/claude` |
-| Windows (native) | `where.exe claude` | `C:\Users\you\AppData\Local\Claude\claude.exe` |
-| Windows (npm) | `npm root -g` | `{root}\@anthropic-ai\claude-code\cli.js` |
-
-> **Note**: On Windows, avoid `.cmd` wrappers. Use `claude.exe` or `cli.js`.
-
-**Alternative**: Add your Node.js bin directory to PATH in Settings → Environment → Custom variables.
-
-### npm CLI and Node.js not in same directory
-
-If using npm-installed CLI, check if `claude` and `node` are in the same directory:
-```bash
-dirname $(which claude)
-dirname $(which node)
-```
-
-If different, GUI apps like Obsidian may not find Node.js.
-
-**Solutions**:
-1. Install native binary (recommended)
-2. Add Node.js path to Settings → Environment: `PATH=/path/to/node/bin`
-
-### Codex provider
-
-Codex support is live but still needs more testing across platforms and installation methods. If you run into any bugs, please [submit a GitHub issue](https://github.com/AndySuen1/claudian/issues).
-
-## Architecture
-
-```
-src/
-├── main.ts                      # Plugin entry point
-├── app/                         # Shared defaults and plugin-level storage
-├── core/                        # Provider-neutral runtime, registry, and type contracts
-│   ├── runtime/                 # ChatRuntime interface and approval types
-│   ├── providers/               # Provider registry and workspace services
-│   ├── security/                # Approval utilities
-│   └── ...                      # commands, mcp, prompt, storage, tools, types
-├── providers/
-│   ├── claude/                  # Claude SDK adaptor, prompt encoding, storage, MCP, plugins
-│   └── codex/                   # Codex app-server adaptor, JSON-RPC transport, JSONL history
-├── features/
-│   ├── chat/                    # Sidebar chat: tabs, controllers, renderers
-│   ├── inline-edit/             # Inline edit modal and provider-backed edit services
-│   └── settings/                # Settings shell with provider tabs
-├── shared/                      # Reusable UI components and modals
-├── i18n/                        # Internationalization (10 locales)
-├── utils/                       # Cross-cutting utilities
-└── style/                       # Modular CSS
-```
-
-## Roadmap
-
-- [x] 1M Opus and Sonnet models
-- [x] Codex provider integration
-- [x] Sandbox mode (auto-switch Haiku + restrict external access)
-- [x] Drag vault files onto input for quick context switching
-- [x] Header conversation title display
-- [ ] More to come!
+See the [upstream README](https://github.com/YishenTu/claudian) for the full step-by-step.
 
 ## License
 
 Licensed under the [MIT License](LICENSE).
 
-## Star History
-
-<a href="https://www.star-history.com/?repos=YishenTu%2Fclaudian&type=date&legend=top-left">
- <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/image?repos=AndySuen1/claudian&type=date&theme=dark&legend=top-left" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/image?repos=AndySuen1/claudian&type=date&legend=top-left" />
-   <img alt="Star History Chart" src="https://api.star-history.com/image?repos=AndySuen1/claudian&type=date&legend=top-left" />
- </picture>
-</a>
-
 ## Acknowledgments
 
-- [Obsidian](https://obsidian.md) for the plugin API
-- [Anthropic](https://anthropic.com) for Claude and the [Claude Agent SDK](https://platform.claude.com/docs/en/agent-sdk/overview)
-- [OpenAI](https://openai.com) for [Codex](https://github.com/openai/codex)
+- Upstream [YishenTu/claudian](https://github.com/YishenTu/claudian) — every base feature in this fork comes from there.
+- [Obsidian](https://obsidian.md), [Anthropic](https://anthropic.com), [OpenAI](https://openai.com).
