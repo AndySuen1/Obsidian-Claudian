@@ -529,7 +529,7 @@ describe('FileContextManager', () => {
       manager.destroy();
     });
 
-    it('should not update current note when session is started', () => {
+    it('should switch current note to a non-excluded file after session is started', () => {
       const app = createMockApp({ files: ['notes/a.md'] });
       const manager = new FileContextManager(
         app, containerEl as any, inputEl, createMockCallbacks()
@@ -540,8 +540,9 @@ describe('FileContextManager', () => {
 
       const fileB = createMockTFile('notes/b.md');
       manager.handleFileOpen(fileB);
-      // Should NOT update because session is started
-      expect(manager.getCurrentNotePath()).toBe('notes/a.md');
+      // Post-session switch updates current note and resets sent state so the
+      // new file is re-sent on the next turn.
+      expect(manager.getCurrentNotePath()).toBe('notes/b.md');
       manager.destroy();
     });
 
