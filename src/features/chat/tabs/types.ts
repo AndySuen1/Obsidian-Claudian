@@ -49,7 +49,7 @@ export const MIN_TABS = 3;
  * Maximum number of tabs allowed (settings ceiling).
  * Users can configure up to this many tabs via settings.
  */
-export const MAX_TABS = 12;
+export const MAX_TABS = 10;
 
 /**
  * Minimum max-height for textarea in pixels.

@@ -32,7 +32,6 @@ Drag any vault file onto the input area to set it as the current note context.
 After a session has started, switching to a non-excluded note now updates the current note and resets its sent state, so the new note is re-sent on the next turn.
 
 ### Other Tweaks
-- Max tabs raised from 10 to 12.
 - Voice input (WinRT) feature and its stylesheet removed.
 - Default README language is Chinese (English version lives in [README_en.md](README_en.md)).
 
